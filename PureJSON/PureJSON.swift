@@ -86,7 +86,7 @@ extension Bool {
 /// The basic types contained within JSON
 public enum JSONType {
     case None
-    case Object
+    case Object // Dictionary
     case Array
     case String
     case Number
@@ -97,6 +97,7 @@ public enum JSONType {
 /// Errors
 // Errors that are thrown when accessing the JSON structure. See the extension below for the English descriptions.
 public enum JSONError: ErrorType {
+    case None
     case TypeError(expectedType: JSONType, actualType: JSONType) // thrown by get or set methods
     
     case NotObjectAt(key: String, actualType: JSONType) // thrown by subscripts
@@ -121,14 +122,18 @@ public class JSONAny: CustomStringConvertible {
     }
     
     /**
+    This just uses the internal error if it exists or else throws a type error.
     - Parameter expectedType: The type that was expected (instead of self.type)
     - Returns: An error.
     */
     private func error(expectedType: JSONType) -> JSONError {
-        guard _error != nil else { // this seems like an example of when not to use guard, but it's new, so...
+        if _error != nil {
+            return _error!
+        }
+        if expectedType != type {
             return .TypeError(expectedType: expectedType, actualType: type) // type is overriden
         }
-        return _error!
+        return .None
     }
     
     // All subclasses should override this, I wish Swift had pure virtual functions classes, but I get where they are going with Protocols.
@@ -512,6 +517,8 @@ extension JSONType: CustomStringConvertible {
 extension JSONError: CustomStringConvertible {
     public var description: String {
         switch self {
+        case .None:
+            return "None"
         case .TypeError(let expected, let actual):
             return "Expected \(expected) (Is \(actual))"
         case .NotObjectAt(let key, let actual):
