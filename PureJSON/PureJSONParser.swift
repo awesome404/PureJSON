@@ -12,5 +12,5 @@ func jsonParse(data: String) -> JSONAny {
     
     /// I intended to write a parser in Swift, but didn't.
     
-    return jsonEmptyObject()
+    return JSONType.object()
 }

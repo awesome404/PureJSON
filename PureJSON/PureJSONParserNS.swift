@@ -11,8 +11,8 @@ import Foundation
 public struct JSONParseNS {
     enum Error: ErrorType {
         case String
-        case URL
         case File
+        case URL
         case Key
         case Content
     }
@@ -67,28 +67,28 @@ public struct JSONParseNS {
     private static func jsonFactory(item: AnyObject) throws -> JSONAny {
         switch item {
         case let dict as NSDictionary:
-            let jsonObject = jsonEmptyObject()
+            let object = JSONType.object()
             for (key, item) in dict {
                 guard let strKey = key as? String else {
                     throw Error.Key
                 }
-                try jsonObject.addToObject(jsonFactory(item), forKey: strKey)
+                try object.updateObject(jsonFactory(item), forKey: strKey)
             }
-            return jsonObject
-        case let array as NSArray:
-            let jsonArray = jsonEmptyArray()
-            for item in array {
-                try jsonArray.appendArray(jsonFactory(item))
+            return object
+        case let narray as NSArray:
+            let jarray = JSONType.array()
+            for item in narray {
+                try jarray.appendArray(jsonFactory(item))
             }
-            return jsonArray
+            return jarray
         case let bool as NSNumber where bool.isBool:
-            return json(bool as Bool)
+            return (bool as Bool).json
         case let number as NSNumber:
-            return json(number as Double)
+            return (number as Double).json
         case let string as NSString:
-            return json(string as String)
+            return (string as String).json
         case _ as NSNull:
-            return json()
+            return JSONType.null()
         default:
             throw Error.Content
         }
