@@ -93,31 +93,10 @@ public struct JSONParseNS {
             throw Error.Content
         }
     }
-    
-    /* This crashes XCode 7 Beta 1
-
-    extension enum Error: CustomDebugStringConvertible {
-        var description: String {
-            switch self {
-            case .String:
-                return "Could not convert string to data."
-            case .URL:
-                return "Malformed URL."
-            case .File:
-                return "Could not load file."
-            case .Key:
-                return "Dictionary key is not a string."
-            case .Content:
-                return "Ran into some bad content."
-            }
-        }
-    }*/
 }
 
-/* This crashes XCode 7 Beta 1 too
-
-extension enum JSONParseNS.Error: CustomDebugStringConvertible {
-    var description: String {
+extension JSONParseNS.Error: CustomDebugStringConvertible {
+    var debugDescription: Swift.String {
         switch self {
         case .String:
             return "Could not convert string to data."
@@ -126,12 +105,12 @@ extension enum JSONParseNS.Error: CustomDebugStringConvertible {
         case .File:
             return "Could not load file."
         case .Key:
-            return "Dictionary key is not a string."
+            return "Dictionary key is not a String."
         case .Content:
             return "Ran into some bad content."
         }
     }
-}*/
+}
 
 /// Test to see if an NSNumber is actually a Boolean
 private extension NSNumber {
