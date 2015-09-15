@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		66C55F781B37BAA000DA427C /* NotAPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C55F771B37BAA000DA427C /* NotAPlayground.swift */; };
 		66F7FA701B30486000218C72 /* PureJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 66F7FA6F1B30486000218C72 /* PureJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66F7FA771B30486000218C72 /* PureJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F7FA6C1B30486000218C72 /* PureJSON.framework */; };
 		66F7FA7C1B30486000218C72 /* PureJSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F7FA7B1B30486000218C72 /* PureJSONTests.swift */; };
@@ -27,7 +26,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		66C55F771B37BAA000DA427C /* NotAPlayground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotAPlayground.swift; sourceTree = "<group>"; };
 		66F7FA6C1B30486000218C72 /* PureJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PureJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F7FA6F1B30486000218C72 /* PureJSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PureJSON.h; sourceTree = "<group>"; };
 		66F7FA711B30486000218C72 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -86,7 +84,6 @@
 				66F7FA881B30489E00218C72 /* PureJSONParserNS.swift */,
 				66F7FA711B30486000218C72 /* Info.plist */,
 				66F7FA8C1B3048C000218C72 /* PureJSON.playground */,
-				66C55F771B37BAA000DA427C /* NotAPlayground.swift */,
 			);
 			path = PureJSON;
 			sourceTree = "<group>";
@@ -210,7 +207,6 @@
 			files = (
 				66F7FA8A1B30489E00218C72 /* PureJSONParser.swift in Sources */,
 				66F7FA8B1B30489E00218C72 /* PureJSONParserNS.swift in Sources */,
-				66C55F781B37BAA000DA427C /* NotAPlayground.swift in Sources */,
 				66F7FA891B30489E00218C72 /* PureJSON.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
