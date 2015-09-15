@@ -16,16 +16,16 @@ public enum JSONType {
     case Number // Double
     case Boolean
     case Null
-
-    static func object(object: [Swift.String:JSONConvertible] = [:]) -> JSONAny {
+    
+    public static func object(object: [Swift.String:JSONConvertible] = [:]) -> JSONAny {
         return JSONObject(object)
     }
     
-    static func array(array: [JSONConvertible] = []) -> JSONAny {
+    public static func array(array: [JSONConvertible] = []) -> JSONAny {
         return JSONArray(array)
     }
     
-    static func string(string: Swift.String) -> JSONAny {
+    /*static func string(string: Swift.String) -> JSONAny {
         return JSONString(string)
     }
     
@@ -35,7 +35,7 @@ public enum JSONType {
     
     static func boolean(boolean: Bool) -> JSONAny {
         return JSONBool(boolean)
-    }
+    }*/
     
     static func null() -> JSONAny {
         return JSONNull()
@@ -52,58 +52,47 @@ public protocol JSONConvertible {
 // MARK: - Type Extensions
 /// Extensions to standard types.
 
-extension String: JSONConvertible {
-    public var jsonType: JSONType {
-        return .String
-    }
+/*extension Dictionary where Value: JSONConvertible {
+    public var jsonType: JSONType { return .Object }
     public var json: JSONAny {
-        return JSONString(self)
+        //return JSONObject(self.map { ("\($0)",$1.json)} )
     }
+}*/
+
+extension Array where Element: JSONConvertible {
+    // But how to conform to JSONConvertible in the extension?
+    public var jsonType: JSONType { return .Array }
+    public var json: JSONAny { return JSONArray(self.map { $0.json }) }
+}
+
+extension String: JSONConvertible {
+    public var jsonType: JSONType { return .String }
+    public var json: JSONAny { return JSONString(self) }
 }
 
 extension Int: JSONConvertible {
-    public var jsonType: JSONType {
-        return .Number
-    }
-    public var json: JSONAny {
-        return JSONNumber(Double(self))
-    }
+    public var jsonType: JSONType { return .Number }
+    public var json: JSONAny { return JSONNumber(Double(self)) }
 }
 
 extension UInt: JSONConvertible {
-    public var jsonType: JSONType {
-        return .Number
-    }
-    public var json: JSONAny {
-        return JSONNumber(Double(self))
-    }
+    public var jsonType: JSONType { return .Number }
+    public var json: JSONAny { return JSONNumber(Double(self)) }
 }
 
 extension Float: JSONConvertible {
-    public var jsonType: JSONType {
-        return .Number
-    }
-    public var json: JSONAny {
-        return JSONNumber(Double(self))
-    }
+    public var jsonType: JSONType { return .Number }
+    public var json: JSONAny { return JSONNumber(Double(self)) }
 }
 
 extension Double: JSONConvertible {
-    public var jsonType: JSONType {
-        return .Number
-    }
-    public var json: JSONAny {
-        return JSONNumber(self)
-    }
+    public var jsonType: JSONType { return .Number }
+    public var json: JSONAny { return JSONNumber(self) }
 }
 
 extension Bool: JSONConvertible {
-    public var jsonType: JSONType {
-        return .Boolean
-    }
-    public var json: JSONAny {
-        return JSONBool(self)
-    }
+    public var jsonType: JSONType { return .Boolean }
+    public var json: JSONAny { return JSONBool(self) }
 }
 
 /// Errors
@@ -152,13 +141,8 @@ public class JSONAny: JSONConvertible, CustomStringConvertible, Equatable {
     /**
     - Returns: The type of the JSON item.
     */
-    public var jsonType: JSONType {
-        return .Null
-    }
-    
-    public final var json: JSONAny {
-        return self
-    }
+    public var jsonType: JSONType { return .Null }
+    public final var json: JSONAny { return self }
     
     // These just throw the stored error (from a subscript) or a TypeError for when they are not overriden.
     //  When they are overriden they don't throw anything.
@@ -238,12 +222,10 @@ private class JSONObject: JSONAny {
     
     private var _object: [String:JSONAny]
 
-    init(_ args: [String:JSONConvertible]? = nil) {
+    init(_ args: [String:JSONConvertible] = [:]) {
         _object = [:]
-        if let args = args {
-            for (key, value) in args {
-                _object[key] = value.json
-            }
+        for (key, value) in args {
+            _object[key] = value.json
         }
     }
     
@@ -269,23 +251,12 @@ private class JSONObject: JSONAny {
     // MARK: CustomStringConvertible
     
     override var description: String {
-        
-        let count = _object.count
-        guard count > 0 else {
-            return ""
-        }
-        
-        var result = ["{"], i = 0
 
-        for (key,value) in _object {
-            result.append("\"\(key.jsonEscape)\": \(value)")
-            if ++i != count {
-                result.append(",")
-            }
+        guard _object.count > 0 else {
+            return "{}"
         }
-        result.append("}")
         
-        return String().join(result)
+        return "{" + _object.map({ (key, value) in "\"\(key.jsonEscape)\": \(value)"}).joinWithSeparator(",") + "}"
     }
 }
 
@@ -296,13 +267,12 @@ private class JSONArray: JSONAny {
     
     private var _array: [JSONAny]
     
-    init(_ args: [JSONConvertible]? = nil) {
-        _array = []
-        if let args = args {
-            for item in args {
-                _array.append(item.json)
-            }
-        }
+    init(_ args: [JSONConvertible] = []) {
+        _array = args.map { $0.json }
+    }
+    
+    init(args: JSONAny...) {
+        _array = args.map { $0.json }
     }
     
     override var jsonType: JSONType {
@@ -332,22 +302,11 @@ private class JSONArray: JSONAny {
     // MARK: CustomStringConvertible
     
     override var description: String {
-
         guard _array.count > 0 else {
-            return ""
+            return "[]"
         }
-
-        guard _array.count > 1  else {
-            return "[\(_array.first!.description)]"
-        }
-        
-        var result = ["["]//, i = 0
-        for i in 0..<(_array.count-1) {
-            result.append("\(_array[i].description),")
-        }
-        result.append("\(_array.last!.description)]")
-        
-        return String().join(result)
+        //return "[" + ",".join(_array.map {"\($0)"}) + "]"
+        return "[" + _array.map({"\($0)"}).joinWithSeparator(",") + "]"
     }
 }
 
@@ -459,6 +418,7 @@ private class JSONNull: JSONAny {
 
 // MARK: - String Escape
 // String Escape
+// This is kind of temporary...
 
 private func jsonEscape(string: String) -> String {
     return string.jsonEscape
@@ -472,22 +432,6 @@ extension String {
             string = string.stringByReplacingOccurrencesOfString(key, withString: value)
         }
         return string
-    }
-}
-
-// MARK: - Type Strings
-/// Type Strings
-
-extension JSONType: CustomStringConvertible {
-    public var description: Swift.String {
-        switch self {
-        case .Object:  return "Object"
-        case .Array:   return "Array"
-        case .String:  return "String"
-        case .Number:  return "Number"
-        case .Boolean: return "Boolean"
-        case .Null:    return "Null"
-        }
     }
 }
 
@@ -515,27 +459,30 @@ extension JSONError: CustomStringConvertible {
 
 /// JSONAny Convertible
 public func ==(left: JSONAny, right: JSONAny) -> Bool {
-    do {
-        if left.jsonType == right.jsonType {
-            switch left.jsonType {
-            case .Object:
-                return (left as! JSONObject)._object == (right as! JSONObject)._object // forcing is dirty
-            case .Array:
-                return (left as! JSONArray)._array == (right as! JSONArray)._array // forcing is dirty
-            case .String:
-                return try left.string() == right.string()
-            case .Number:
-                return try left.number() == right.number()
-            case .Boolean:
-                return try left.bool() == right.bool()
-            case .Null:
-                return true
+    if left.jsonType == right.jsonType {
+        switch left.jsonType {
+        case .Object:
+            return (left as! JSONObject)._object == (right as! JSONObject)._object // forcing is dirty
+        case .Array:
+            return (left as! JSONArray)._array == (right as! JSONArray)._array // forcing is dirty
+        case .String:
+            if let result = try? left.string() == right.string() {
+                return result
             }
+        case .Number:
+            if let result = try? left.number() == right.number() {
+                return result
+            }
+        case .Boolean:
+            if let result = try? left.bool() == right.bool() {
+                return result
+            }
+        case .Null:
+            return true
         }
-    } catch {
-        // because we check the type before hand nothing should ever be thrown
-        // either way, ignore it and return false
     }
+
+        
     return false
 }
 
