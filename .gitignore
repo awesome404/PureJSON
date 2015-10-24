@@ -1,9 +1,3 @@
-*.xcscheme
+PureJSON.xcodeproj/xcuserdata/*
+PureJSON.xcodeproj/project.xcworkspace/*
 
-*.xcworkspacedata
-
-*.xcuserstate
-
-*.plist
-
-*.xcbkptlist
