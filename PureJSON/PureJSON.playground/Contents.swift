@@ -9,25 +9,22 @@ import PureJSON
 
 var data = JSONType.object() // create an empty Object
 
-do {
-    try data.updateObject(JSONType.array(), forKey: "rules") // Create an empty Array in the Object
-    try data["rules"].appendArray("You do not talk about Fight Club") // Add a string to the Array in the Object
-    try data["rules"].appendArray("You do not talk about Cheeseburgers") // Add another string to the Array in the Object
-    try data["rules"].updateArray("You do not talk about Fight Club", atIndex: 1) // Change the value
-    
-    print(data)
-    
-    data = JSONType.object([
-        "rules" :
-            JSONType.array(["You do not talk about Fight Club".json, // String using the type extension
-                "You do not talk about Fight Club"  // String using the creation functio
-                ])
-        ])
-    
-} catch {
-    print(error)
-}
 
+try! data.updateObject(JSONType.array(), forKey: "rules") // Create an empty Array in the Object
+try data["rules"].appendArray("You do not talk about Fight Club") // Add a string to the Array in the Object
+try data["rules"].appendArray("You do not talk about Cheeseburgers") // Add another string to the Array in the Object
+try data["rules"].updateArray("You do not talk about Fight Club", atIndex: 1) // Change the value
+
+print(data)
+
+data = JSONType.object([
+    "rules" :
+        JSONType.array(["You do not talk about Fight Club".json, // String using the type extension
+            "You do not talk about Fight Club"  // String using the creation functio
+            ])
+    ])
+
+print(data)
 //: For objects and arrays subscripts are used and for other types accessor methods are used. (Methods were use because they can throw, where computed properties can’t)
 
 do {
@@ -39,10 +36,10 @@ do {
 }
 
 
-do {
+/*do {
     var yts = try JSONParseNS.parseURL("https://yts.to/api/v2/list_movies.json")
     print(yts)
 
 } catch {
     print(error)
-}
+}*/
