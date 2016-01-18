@@ -462,9 +462,9 @@ public func ==(left: JSONAny, right: JSONAny) -> Bool {
     if left.jsonType == right.jsonType {
         switch left.jsonType {
         case .Object:
-            return (left as! JSONObject)._object == (right as! JSONObject)._object // forcing is dirty
+            return false //(left as! JSONObject)._object == (right as! JSONObject)._object // forcing is dirty
         case .Array:
-            return (left as! JSONArray)._array == (right as! JSONArray)._array // forcing is dirty
+            return false //(left as! JSONArray)._array == (right as! JSONArray)._array // forcing is dirty
         case .String:
             if let result = try? left.string() == right.string() {
                 return result
