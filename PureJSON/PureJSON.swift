@@ -160,6 +160,10 @@ public class JSONAny: JSONConvertible, CustomStringConvertible, Equatable {
         throw error(.Object)
     }
     
+    public func object() throws -> [String:JSONAny] {
+        throw error(.Object)
+    }
+    
     // MARK: Array Override Stubs
 
     /**
@@ -238,6 +242,10 @@ private class JSONObject: JSONAny {
 
     override func updateObject(newItem: JSONConvertible, forKey: String) throws {
         _object[forKey] = newItem.json
+    }
+    
+    override func object() throws -> [String: JSONAny] {
+        return _object
     }
     
     // Subscript
