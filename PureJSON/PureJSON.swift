@@ -220,10 +220,11 @@ public class JSONAny: JSONConvertible, CustomStringConvertible, Equatable {
 
 private class JSONObject: JSONAny {
     
-    private var _object: [String:JSONAny]
+    private var _object: [String:JSONAny] = [:]
+    
+    init() {}
 
-    init(_ args: [String:JSONConvertible] = [:]) {
-        _object = [:]
+    init(_ args: [String:JSONConvertible]) {
         for (key, value) in args {
             _object[key] = value.json
         }
