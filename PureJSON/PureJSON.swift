@@ -178,6 +178,10 @@ public class JSONAny: JSONConvertible, CustomStringConvertible, Equatable {
         throw error(.Array)
     }
     
+    public func array() throws -> [JSONAny] {
+        throw error(.Array)
+    }
+    
     // MARK: String Override Stubs
     /**
     - Returns: The String value of this JSON item.
@@ -299,6 +303,10 @@ private class JSONArray: JSONAny {
             throw JSONError.InvalidIndex(index: atIndex)
         }
         _array[atIndex] = newItem.json
+    }
+    
+    override func array() throws -> [JSONAny] {
+        return _array
     }
 
     // Subscript
