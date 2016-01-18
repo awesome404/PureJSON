@@ -1,3 +1,5 @@
+
+*.xcworkspace
 PureJSON.xcodeproj/xcuserdata/*
 PureJSON.xcodeproj/project.xcworkspace/*
 
